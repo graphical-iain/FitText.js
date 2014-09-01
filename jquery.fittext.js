@@ -27,7 +27,7 @@
 					
 					$this.addClass("justify");
 
-					if (newSize <= settings.minFontSize || newSize >= settings.maxFontSize) {
+					if (newSize <= parseFloat(settings.minFontSize) || newSize >= parseFloat(settings.maxFontSize)) {
 						$this.removeClass("justify");
 					}
           
