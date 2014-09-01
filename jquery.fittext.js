@@ -1,33 +1,36 @@
-/*global jQuery */
-/*!
-* FitText.js 1.2
-*
-* Copyright 2011, Dave Rupert http://daverupert.com
-* Released under the WTFPL license
-* http://sam.zoy.org/wtfpl/
-*
-* Date: Thu May 05 14:23:00 2011 -0600
-*/
-
 (function( $ ){
 
-  $.fn.fitText = function( kompressor, options ) {
+  $.fn.fitText = function( options ) {
 
     // Setup options
-    var compressor = kompressor || 1,
-        settings = $.extend({
+    var settings = $.extend({
           'minFontSize' : Number.NEGATIVE_INFINITY,
           'maxFontSize' : Number.POSITIVE_INFINITY
         }, options);
 
     return this.each(function(){
-
-      // Store the object
       var $this = $(this);
 
-      // Resizer() resizes items based on the object width divided by the compressor * 10
-      var resizer = function () {
-        $this.css('font-size', Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)));
+      // wrap text with span to find initial width of just the text
+      var width = $this.wrapInner( "<span id='fit' style='inline'></span>" ).find("#fit").width();
+      //remove span
+      $this.html( $this.find("#fit").html() );
+			//get initial font size
+			var fontSize = parseInt( $this.css("fontSize"), 10 );
+
+      // Resizer() resizes text to fill parent container based on text width
+      var resizer = function resizer() {
+      		
+      		// calculate multiplier based on the ratio of the text width to the container
+      		var multiplier = $this.width()/width;
+					var newSize = fontSize * multiplier;
+					
+					if ( newSize > parseFloat( settings.minFontSize ) || newSize < parseFloat( settings.maxFontSize ) ) {
+						$this.addClass("justify");
+					}
+          
+          // set new size / make sure newSize is not larger or smaler than min and max sizes
+        	$this.css('font-size', Math.max(Math.min(newSize, parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)));
       };
 
       // Call once to set.
