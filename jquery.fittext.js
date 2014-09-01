@@ -25,8 +25,10 @@
       		var multiplier = $this.width()/width;
 					var newSize = fontSize * multiplier;
 					
-					if ( newSize > parseFloat( settings.minFontSize ) || newSize < parseFloat( settings.maxFontSize ) ) {
-						$this.addClass("justify");
+					$this.addClass("justify");
+
+					if (newSize <= settings.minFontSize || newSize >= settings.maxFontSize) {
+						$this.removeClass("justify");
 					}
           
           // set new size / make sure newSize is not larger or smaler than min and max sizes
